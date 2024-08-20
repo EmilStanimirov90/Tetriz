@@ -12,7 +12,9 @@ class Game:
         self.next_brick = self.get_random_brick()
         self.game_over = False
         self.score = 0
-        self.game_speed = 0
+        self.total_lines_cleared = 0
+        self.level = 0
+        self.game_speed = 600  # ms
         self.rotate_sound = [pygame.mixer.Sound("sounds/swing-whoosh-5-198498.mp3"),
                              pygame.mixer.Sound("sounds/swing-whoosh-4-198496.mp3"),
                              pygame.mixer.Sound("sounds/swing-whoosh-9-198502.mp3")]
@@ -27,16 +29,15 @@ class Game:
 
         self.clear_sound.set_volume(2)
 
-
     def update_score(self, lines_cleared, move_down_points):
         if lines_cleared == 1:
-            self.score += 100
+            self.score += 40 * (self.level + 1)
         elif lines_cleared == 2:
-            self.score += 300
+            self.score += 100 * (self.level + 1)
         elif lines_cleared == 3:
-            self.score += 500
+            self.score += 300 * (self.level + 1)
         elif lines_cleared == 4:
-            self.score += 700
+            self.score += 1200 * (self.level + 1)
         self.score += move_down_points
 
     def get_random_brick(self):
@@ -73,6 +74,7 @@ class Game:
             self.clear_sound.play()
 
             self.update_score(rows_cleared, 0)
+            self.increase_game_speed(rows_cleared)
 
         if not self.brick_fits():
             self.game_over = True
@@ -107,8 +109,10 @@ class Game:
                 return False
         return True
 
-    def increase_game_speed(self):
-        self.game_speed = self.score // 20
+    def increase_game_speed(self, lines_cleared):
+        self.total_lines_cleared += lines_cleared
+        self.level = self.total_lines_cleared // 1
+        self.game_speed -= (self.level + 1) * 200
 
     def draw(self, screen):
         self.grid.draw(screen)
