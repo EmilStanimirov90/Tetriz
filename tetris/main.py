@@ -20,7 +20,6 @@ screen = pygame.display.set_mode((500, 620))
 pygame.display.set_caption("Python Tetriz")
 
 # game speed
-game_speed_FPS = 60
 clock = pygame.time.Clock()
 
 # instantiate game class
@@ -28,7 +27,7 @@ game = Game()
 
 # move blocks down independently of game loop
 GAME_UPDATE = pygame.USEREVENT
-pygame.time.set_timer(GAME_UPDATE, 200)
+pygame.time.set_timer(GAME_UPDATE, 600 - game.game_speed)
 
 # game loop
 while True:
@@ -59,7 +58,7 @@ while True:
         if event.type == GAME_UPDATE and not game.game_over:
             game.move_down()
 
-    #create score text
+    # create score text
     score_value_surface = title_font.render(str(game.score), True, Colors.WHITE)
     # fill in screen
     screen.fill(Colors.pale_blue)
@@ -72,11 +71,11 @@ while True:
     pygame.draw.rect(screen, Colors.blue, score_rect, 0, 5)
     # we draw the score on top of the score rect, thats why the code is underneath
     # plus a trick to center it
-    screen.blit(score_value_surface, score_value_surface.get_rect(centerx = score_rect.centerx,
-                                                                  centery = score_rect.centery))
+    screen.blit(score_value_surface, score_value_surface.get_rect(centerx=score_rect.centerx,
+                                                                  centery=score_rect.centery))
     pygame.draw.rect(screen, Colors.blue, next_rect, 0, 10)
     game.draw(screen)
 
     # refresh screen changes at certain fps
     pygame.display.update()
-    clock.tick(game_speed_FPS)
+    clock.tick(60)

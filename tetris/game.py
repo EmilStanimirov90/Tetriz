@@ -1,6 +1,7 @@
 from grid import Grid
 from bricks import *
 import random
+import pygame
 
 
 class Game:
@@ -11,6 +12,21 @@ class Game:
         self.next_brick = self.get_random_brick()
         self.game_over = False
         self.score = 0
+        self.game_speed = 0
+        self.rotate_sound = [pygame.mixer.Sound("sounds/swing-whoosh-5-198498.mp3"),
+                             pygame.mixer.Sound("sounds/swing-whoosh-4-198496.mp3"),
+                             pygame.mixer.Sound("sounds/swing-whoosh-9-198502.mp3")]
+
+        self.clear_sound = pygame.mixer.Sound("sounds/large-underwater-explosion-190270.mp3")
+
+        pygame.mixer.music.load("sounds/Voyage 👾 (16-Bit Arcade No Copyright Music).mp3")
+        pygame.mixer.music.play(-1)
+
+        # sound volume
+        pygame.mixer.music.set_volume(0.2)
+
+        self.clear_sound.set_volume(2)
+
 
     def update_score(self, lines_cleared, move_down_points):
         if lines_cleared == 1:
@@ -53,7 +69,11 @@ class Game:
         self.current_brick = self.next_brick
         self.next_brick = self.get_random_brick()
         rows_cleared = self.grid.clear_all_full_rows()
-        self.update_score(rows_cleared, 0)
+        if rows_cleared > 0:
+            self.clear_sound.play()
+
+            self.update_score(rows_cleared, 0)
+
         if not self.brick_fits():
             self.game_over = True
 
@@ -75,6 +95,10 @@ class Game:
         self.current_brick.rotate()
         if not self.brick_inside() or not self.brick_fits():
             self.current_brick.undo_rotation()
+        else:
+            rotate_sound = random.choice(self.rotate_sound)
+            rotate_sound.set_volume(0.2)
+            rotate_sound.play()
 
     def brick_inside(self):
         tiles = self.current_brick.get_cell_positions()
@@ -83,13 +107,16 @@ class Game:
                 return False
         return True
 
+    def increase_game_speed(self):
+        self.game_speed = self.score // 20
+
     def draw(self, screen):
         self.grid.draw(screen)
         self.current_brick.draw(screen, 11, 11)
 
         if self.next_brick.id == 3:
-            self.next_brick.draw(screen,255,290)
+            self.next_brick.draw(screen, 255, 290)
         elif self.next_brick.id == 4:
             self.next_brick.draw(screen, 250, 280)
         else:
-            self.next_brick.draw(screen, 270, 270 )
+            self.next_brick.draw(screen, 270, 270)
