@@ -29,7 +29,7 @@ clock = pygame.time.Clock()
 # instantiate game class
 game = Game()
 
-# move blocks down independently of game loop
+# move blocks independently of game loop
 GAME_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(GAME_UPDATE, game.game_speed)
 
@@ -62,6 +62,7 @@ while True:
         # move blocks down independently of game loop
         if event.type == GAME_UPDATE and not game.game_over:
             game.move_down()
+            pygame.time.set_timer(GAME_UPDATE, game.game_speed)
     #update  game speed
 
     # create score text

@@ -20,7 +20,7 @@ class Game:
                              pygame.mixer.Sound("sounds/swing-whoosh-9-198502.mp3")]
 
         self.clear_sound = pygame.mixer.Sound("sounds/large-underwater-explosion-190270.mp3")
-
+        self.stop_sound = pygame.mixer.Sound("sounds/wood-door-knock-106669.mp3")
         pygame.mixer.music.load("sounds/Voyage 👾 (16-Bit Arcade No Copyright Music).mp3")
         pygame.mixer.music.play(-1)
 
@@ -67,14 +67,17 @@ class Game:
         tiles = self.current_brick.get_cell_positions()
         for position in tiles:
             self.grid.grid[position.row][position.col] = self.current_brick.id
+        self.stop_sound.play()
         self.current_brick = self.next_brick
         self.next_brick = self.get_random_brick()
         rows_cleared = self.grid.clear_all_full_rows()
+        self.total_lines_cleared += rows_cleared
+
         if rows_cleared > 0:
             self.clear_sound.play()
 
             self.update_score(rows_cleared, 0)
-            self.increase_game_speed(rows_cleared)
+            self.increase_game_speed()
 
         if not self.brick_fits():
             self.game_over = True
@@ -109,10 +112,11 @@ class Game:
                 return False
         return True
 
-    def increase_game_speed(self, lines_cleared):
-        self.total_lines_cleared += lines_cleared
+    def increase_game_speed(self):
+
         self.level = self.total_lines_cleared // 1
-        self.game_speed -= (self.level + 1) * 200
+        if self.level > 3:
+            self.game_speed = 600 - (self.level + 1) * 199
 
     def draw(self, screen):
         self.grid.draw(screen)
