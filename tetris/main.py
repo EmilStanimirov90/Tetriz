@@ -31,8 +31,8 @@ game = Game()
 
 # move blocks independently of game loop
 GAME_UPDATE = pygame.USEREVENT
-pygame.time.set_timer(GAME_UPDATE, game.game_speed)
 
+pygame.time.set_timer(GAME_UPDATE, game.game_speed)
 
 # game loop
 while True:
@@ -63,8 +63,10 @@ while True:
         if event.type == GAME_UPDATE and not game.game_over:
             game.move_down()
             pygame.time.set_timer(GAME_UPDATE, game.game_speed)
-    #update  game speed
-
+    # update  game speed
+    # pygame.time.set_timer(GAME_UPDATE, game.game_speed)
+    print(game.game_speed)
+    print(game.total_lines_cleared)
     # create score text
     score_value_surface = title_font.render(str(game.score), True, Colors.WHITE)
     # create level text

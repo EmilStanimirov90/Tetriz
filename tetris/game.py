@@ -88,6 +88,9 @@ class Game:
         self.current_brick = self.get_random_brick()
         self.next_brick = self.get_random_brick()
         self.score = 0
+        self.level = 0
+        self.game_speed = 600
+        self.total_lines_cleared = 0
 
     def brick_fits(self):
         tiles = self.current_brick.get_cell_positions()
@@ -113,10 +116,10 @@ class Game:
         return True
 
     def increase_game_speed(self):
-
-        self.level = self.total_lines_cleared // 1
-        if self.level > 3:
-            self.game_speed = 600 - (self.level + 1) * 199
+        speed_levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 16, 19, 29]
+        self.level = self.total_lines_cleared // 5
+        if self.level in speed_levels:
+            self.game_speed = 600 - (self.level * 38)
 
     def draw(self, screen):
         self.grid.draw(screen)

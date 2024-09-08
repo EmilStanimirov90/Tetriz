@@ -1,3 +1,6 @@
+from random import randint
+
+
 class Colors:
     orange = (206, 119, 50)
     green = (91, 149, 88)
@@ -22,4 +25,15 @@ class Colors:
 
     @classmethod
     def get_cell_colors(cls):
-        return [cls.BLACK, cls.pink, cls.RED, cls.GREEN, cls.BLUE, cls.CYAN, cls.MAGENTA, cls.YELLOW, cls.ORANGE]
+        return [cls.BLACK, cls.pink, cls.RED, cls.CYAN, cls.GREEN, cls.BLUE, cls.YELLOW, cls.ORANGE]
+
+    @classmethod
+    def get_random_cell_colors(cls):
+        colors_list = [cls.BLACK,]
+        for i in range(1, 10):
+            r = randint(0, 255)
+            g = randint(0, 255)
+            b = randint(0, 255)
+            colors_list.append((r, g, b))
+
+        return colors_list
